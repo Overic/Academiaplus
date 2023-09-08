@@ -81,7 +81,6 @@ class EtudiantController extends AbstractController
         }
 
         return $this->render('admin/editEtu.html.twig', [
-        // return $this->render('etudiant/edit.html.twig', [
             'etudiant' => $etudiant,
             'form' => $form,
         ]);

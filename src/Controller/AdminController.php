@@ -2,49 +2,37 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\User;
+use App\Entity\Etudiant;
+use App\Form\UserFormType;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[Route('/admin')]
+#[IsGranted('ROLE_ADMIN')]
 class AdminController extends AbstractController
 {
-    // #[Route('/', name: 'app_admin')]
-    // public function index(): Response
-    // {
-    //     return $this->render('admin/index.html.twig', [
-    //         'controller_name' => 'AdminController',
-    //     ]);
-    // }
-
-    #[Route('/dashboard', name: 'app_dashboard')]
-    public function dashboard(): Response
+    
+    #[Route('/{id}/edit', name: 'app_profilAdmin')]
+    public function profilAdmin(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('admin/listeEtu.html.twig', [
-            'controller_name' => 'AdminController',
-        ]);
-    }
+        $form = $this->createForm(UserFormType::class, $user);
+        $form->handleRequest($request);
 
-    #[Route('/dashboard/add-etudiant', name: 'app_addEtu')]
-    public function addEtu(): Response
-    {
-        return $this->render('admin/addEtu.html.twig', [
-            'controller_name' => 'AdminController',
-        ]);
-    }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($user); 
+            $entityManager->flush();
+            $this->addFlash('success', 'Le compte admin a été modifié avec succès.');
+            return $this->redirectToRoute('app_etudiant_index', [], Response::HTTP_SEE_OTHER);
+        }
 
-    #[Route('/dashboard/modifie-etudiant', name: 'app_editEtu')]
-    public function editEtu(): Response
-    {
-        return $this->render('admin/editEtu.html.twig', [
-            'controller_name' => 'AdminController',
-        ]);
-    }
-
-    #[Route('/dashboard/profil-admin', name: 'app_profilAdmin')]
-    public function profilAdmin(): Response
-    {
         return $this->render('admin/profileAdmin.html.twig', [
-            'controller_name' => 'AdminController',
+            'user' => $user,
+            'form' => $form,
         ]);
     }
 }
