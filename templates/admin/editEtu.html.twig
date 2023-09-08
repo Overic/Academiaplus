@@ -43,14 +43,14 @@
                   <span class="availability-status online"></span>
                 </div>
                 <div class="nav-profile-text">
-                  <p class="mb-1 text-black">David Greymaax</p>
+                  <p class="mb-1 text-black">{{ app.user.prenom }} {{ app.user.nom }}</p>
                 </div>
               </a>
               <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
                 <a class="dropdown-item" href="{{ path('app_profilAdmin') }}">
                   <i class="mdi mdi-cached me-2 text-success"></i> Profile </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" onclick="return confirm('Êtes-vous sûr de vouloir vous déconnecter ?');" href="{{ path('security.logout') }}">
                   <i class="mdi mdi-logout me-2 text-primary"></i> Se déconnecter </a>
               </div>
             </li>
@@ -148,7 +148,7 @@
               </div>
             </li>
             <li class="nav-item nav-logout d-none d-lg-block">
-              <a class="nav-link" href="#">
+              <a class="nav-link" onclick="return confirm('Êtes-vous sûr de vouloir vous déconnecter ?');" href="{{ path('security.logout') }}>
                 <i class="mdi mdi-power"></i>
               </a>
             </li>
@@ -176,14 +176,14 @@
                   <!--change to offline or busy as needed-->
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
-                  <span class="font-weight-bold mb-2">David Grey. H</span>
+                  <span class="font-weight-bold mb-2"{{ app.user.prenom }} {{ app.user.nom }}</span>
                   <span class="text-secondary text-small">Project Manager</span>
                 </div>
                 <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ path('app_dashboard') }}">
+              <a class="nav-link" href="{{ path('app_etudiant_index') }}">
                 <span class="menu-title">Les etudiants</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
@@ -208,85 +208,20 @@
                 </ul>
               </nav>
             </div>
-            <div class="container d-flex justify-content-center">
+          
+           <div class="container d-flex justify-content-center">
                 <div class="col-md-6 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
                             <div class="container d-flex justify-content-center">
                                 <h4 class="card-title">Modifier un etudiant</h4>
                             </div>
-                            <form class="forms-sample">
-                                <div class="form-group row">
-                                    <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Matricule</label>
-                                    <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="exampleInputUsername2" placeholder="Nom">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Nom</label>
-                                    <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="exampleInputUsername2" placeholder="Nom">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Prénom</label>
-                                    <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="exampleInputEmail2" placeholder="Prénom">
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group row">
-                                    <label for="exampleFormControlSelect3" class="col-sm-3 col-form-label">Niveau d'étude</label>
-                                    <div class="col-sm-9">
-                                        <select class="form-control form-control-sm" id="exampleFormControlSelect3">
-                                            <option>Licence 1</option>
-                                            <option>Licence 2</option>
-                                            <option>Licence 3</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="exampleFormControlSelect3" class="col-sm-3 col-form-label">Filière</label>
-                                    <div class="col-sm-9">
-                                        <select class="form-control form-control-sm" id="exampleFormControlSelect3">
-                                            <option>IRT</option>
-                                            <option>Gestion</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="exampleFormControlSelect3" class="col-sm-3 col-form-label">Option</label>
-                                    <div class="col-sm-9">
-                                        <select class="form-control form-control-sm" id="exampleFormControlSelect3">
-                                            <option>AL</option>
-                                            <option>SRC</option>
-                                            <option>SI</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">Sexe</label>
-                                    <div class="col-sm-4">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios1" value="" checked> M </label>
-                                    </div>
-                                    </div>
-                                    <div class="col-sm-5">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" name="membershipRadios" id="membershipRadios2" value="option2"> F </label>
-                                    </div>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-gradient-primary me-2">Modifier</button>
-                                <button class="btn btn-light">Annuler</button>
-                            </form>
+                          {{ include('etudiant/_form.html.twig', {'button_label': 'Modifier'}) }}
                         </div>
                     </div>
                 </div>
             </div>
+
 <!-- container-scroller -->
     <!-- plugins:js -->
     <script src="{{ asset('assets/vendors/js/vendor.bundle.base.js')}}"></script>

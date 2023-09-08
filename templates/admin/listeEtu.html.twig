@@ -63,15 +63,14 @@
                   <span class="availability-status online"></span>
                 </div>
                 <div class="nav-profile-text">
-                  <p class="mb-1 text-black">David Greymaax</p>
+                  <p class="mb-1 text-black">{{ app.user.prenom }} {{ app.user.nom }}</p>
                 </div>
               </a>
               <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
                 <a class="dropdown-item" href="{{ path('app_profilAdmin') }}">
                   <i class="mdi mdi-cached me-2 text-success"></i> Profile </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">
-                  <i class="mdi mdi-logout me-2 text-primary"></i> Se déconnecter </a>
+                <a class="dropdown-item" onclick="return confirm('Êtes-vous sûr de vouloir vous déconnecter ?');" href="{{ path('security.logout') }}"><i class="mdi mdi-logout me-2 text-primary"></i> Se déconnecter </a>
               </div>
             </li>
             <li class="nav-item d-none d-lg-block full-screen-link">
@@ -168,7 +167,7 @@
               </div>
             </li>
             <li class="nav-item nav-logout d-none d-lg-block">
-              <a class="nav-link" href="#">
+              <a class="nav-link" onclick="return confirm('Êtes-vous sûr de vouloir vous déconnecter ?');" href="{{ path('security.logout') }}">
                 <i class="mdi mdi-power"></i>
               </a>
             </li>
@@ -191,19 +190,19 @@
             <li class="nav-item nav-profile">
               <a href="#" class="nav-link">
                 <div class="nav-profile-image">
-                  <img src="assets/images/faces/face1.jpg" alt="profile">
+                  <img src="{{ asset('assets/images/faces/face1.jpg')}}" alt="profile">
                   <span class="login-status online"></span>
                   <!--change to offline or busy as needed-->
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
-                  <span class="font-weight-bold mb-2">David Grey. H</span>
-                  <span class="text-secondary text-small">Project Manager</span>
+                  <span class="font-weight-bold mb-2">{{ app.user.prenom }} {{ app.user.nom }}</span>
+                  <span class="text-secondary text-small">Admin</span>
                 </div>
                 <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ path('app_dashboard') }}">
+              <a class="nav-link" href="#">
                 <span class="menu-title">Les etudiants</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
@@ -228,13 +227,23 @@
               </nav>
             </div>
 
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% for flash_error in app.flashes('error') %}
+                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+            {% endfor %}
+
             <div class="row">
               <div class="col-12 grid-margin">
                 <div class="card">
                   <div class="card-body">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
                         <h4 class="card-title">Liste des Etudiants</h4>
-                        <a href="{{ path('app_addEtu')}}" class="btn btn-block btn-lg btn-gradient-primary">+ Ajouter un etudiant</a>
+                        <a href="{{ path('app_etudiant_new')}}" class="btn btn-block btn-lg btn-gradient-primary">+ Ajouter un etudiant</a>
                     </div>
 
                     <div class="table-responsive">
@@ -245,59 +254,38 @@
                             <th> Nom </th>
                             <th> Prenom </th>
                             <th> Niveau d'étude </th>
-                            <th> Filière </th>
+                            {# <th> Filière </th> #}
                             <th> Option </th>
                             <th> Sexe </th>
+                            <th> Date de creation </th>
                             <th> Action </th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>
-                              01666556
-                            </td>
-                            <td> Deo </td>
-                            <td>
-                              John
-                            </td>
-                            <td> Licence 1 </td>
-                            <td> IRT </td>
-                            <td> AL </td>
-                            <td> M </td>
-                            <td> 
-                              <a href="{{ path('app_editEtu') }}">
-                                <span class="page-title-icon bg-primary text-white me-2 tail">
-                                  <i class="fa-solid fa-pen-to-square"></i>
-                                </span>
-                              </a>
-                              <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="page-title-icon bg-danger text-white me-2 tail" style="border: none;">
-                                <i class="fa-solid fa-trash"></i>
-                              </button>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              01666556
-                            </td>
-                            <td> Deo </td>
-                            <td>
-                              John
-                            </td>
-                            <td> Licence 1 </td>
-                            <td> IRT </td>
-                            <td> AL </td>
-                            <td> M </td>
-                            <td> 
-                              <a href="{{ path('app_editEtu') }}">
-                                <span class="page-title-icon bg-primary text-white me-2 tail">
-                                  <i class="fa-solid fa-pen-to-square"></i>
-                                </span>
-                              </a>
-                              <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="page-title-icon bg-danger text-white me-2 tail" style="border: none;">
-                                <i class="fa-solid fa-trash"></i>
-                              </button>
-                            </td>
-                          </tr>
+                          {% for etudiant in etudiants %}
+                              <tr>
+                                  <td>{{ etudiant.matricule }}</td>
+                                  <td>{{ etudiant.nom }}</td>
+                                  <td>{{ etudiant.prenom }}</td>
+                                  <td>{{ etudiant.niveau.nom }}</td>
+                                  {# <td>{{ etudiant.option.filiere.nom }}</td> #}
+                                  <td>{{ etudiant.specialite.nom }}</td>
+                                  <td>{{ etudiant.sexe.nom }}</td>
+                                  <td>{{ etudiant.createdAt.format('d/m/Y')}}</td>
+                                  <td class="d-flex">
+                                    <a class="mt-2" href="{{ path('app_etudiant_edit', {'id': etudiant.id}) }}">
+                                      <span class="page-title-icon bg-primary text-white me-2 tail">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                      </span>
+                                    </a>
+                                    {{ include('etudiant/_delete_form.html.twig') }}
+                                  </td>
+                              </tr>
+                          {% else %}
+                              <tr>
+                                <td colspan="6">no records found</td>
+                              </tr>
+                          {% endfor %}
                         </tbody>
                       </table>
                     </div>
@@ -340,7 +328,7 @@
     <!-- End custom js for this page -->
 
   {# Modal boite de confirmation #}
-    <div class="modal-dialog modal-dialog-centered">
+    {# <div class="modal-dialog modal-dialog-centered">
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -358,5 +346,5 @@
             </div>
         </div>
         </div>
-    </div>
+    </div> #}
 {% endblock %}
