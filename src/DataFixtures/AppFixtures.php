@@ -23,6 +23,7 @@ class AppFixtures extends Fixture
         $user->setRoles(['ROLE_ADMIN']);
         $user->setNom('Specter');
         $user->setPrenom('Harver');
+        $user->setImg('face1.jpg');
         $manager->persist($user);
 
         // $Tabfiliere = [

@@ -12,8 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/admin')]
-#[IsGranted('ROLE_ADMIN')]
+#[Route('/dash')]
+#[IsGranted('ROLE_USER')]
 class AdminController extends AbstractController
 {
     
@@ -24,6 +24,20 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            $image = $form->get('img')->getData();
+            // dd($image);
+            if ($image) {
+                // Générez un nom de fichier unique
+                $imageName = md5(uniqid()) . '.' . $image->guessExtension();
+
+                $image->move(
+                    $this->getParameter('image_directory'),
+                    $imageName
+                );
+                $user->setImg($imageName);
+            }
+
             $entityManager->persist($user); 
             $entityManager->flush();
             $this->addFlash('success', 'Le compte admin a été modifié avec succès.');

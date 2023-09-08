@@ -5,8 +5,10 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class UserFormType extends AbstractType
@@ -58,6 +60,13 @@ class UserFormType extends AbstractType
                     new Assert\Length(['min' => 3, 'max' => 50]),
                     new Assert\NotBlank()
                 ]
+            ])
+            ->add('img', FileType::class, [
+                'label' => 'Choose new avatar',
+                'mapped' => false,
+                'required' => false,
+                'attr' => ['class' => 'form-control'],
+                'label_attr' => ['class' => 'form-label'],
             ])
         ;
     }
